@@ -38,6 +38,9 @@ const observer = new IntersectionObserver(
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
+        // Also reset inline styles (used by stat-cards and skill-pillars)
+        entry.target.style.opacity   = '1';
+        entry.target.style.transform = 'translateY(0)';
         observer.unobserve(entry.target); // only animate once
       }
     });
