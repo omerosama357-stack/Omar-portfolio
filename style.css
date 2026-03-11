@@ -191,6 +191,8 @@ img, video, iframe {
   opacity: 0.4;
 }
 .arch-inner {
+  position: relative;
+  isolation: isolate;
   width: 100%;
   height: 100%;
   border-radius: calc(var(--radius-arch));
@@ -198,11 +200,12 @@ img, video, iframe {
   background: var(--lapis-l);
 }
 .arch-inner img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: top center;
-  border-radius: inherit;
   display: block;
 }
 .photo-placeholder {
