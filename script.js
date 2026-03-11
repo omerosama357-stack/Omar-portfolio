@@ -176,4 +176,177 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('%c✦ Omar Al-Refaey Portfolio ✦', 'color:#C8A560;font-size:1.2rem;font-family:serif;');
   console.log('%cBuilt with precision, curiosity, and AI.', 'color:#C1654B;font-size:0.9rem;');
 
+
+
+  // ═══════════════════════════════════════════════════════════
+  //  LIGHTBOX / MEDIA VIEWER
+  // ═══════════════════════════════════════════════════════════
+
+  const lb          = document.getElementById('lightbox');
+  const lbBackdrop  = lb.querySelector('.lb-backdrop');
+  const lbClose     = lb.querySelector('.lb-close');
+  const lbPrev      = lb.querySelector('.lb-prev');
+  const lbNext      = lb.querySelector('.lb-next');
+  const lbMediaWrap = document.getElementById('lbMediaWrap');
+  const lbCaption   = document.getElementById('lbCaption');
+  const lbCounter   = document.getElementById('lbCounter');
+
+  // ── Build image registry grouped by data-lb-group ──────────
+  // Each group is an ordered array of { src, alt, caption }
+  const imageGroups = {};
+
+  document.querySelectorAll('[data-lb-group]').forEach(img => {
+    const group = img.dataset.lbGroup;
+    if (!imageGroups[group]) imageGroups[group] = [];
+    imageGroups[group].push({
+      src:     img.src,
+      alt:     img.alt,
+      caption: img.dataset.lbCaption || img.alt,
+      el:      img
+    });
+    // Store the index within the group on the element for quick lookup
+    img.dataset.lbIndex = imageGroups[group].length - 1;
+  });
+
+  // ── State ───────────────────────────────────────────────────
+  let currentGroup = null;   // array of items
+  let currentIndex = 0;
+  let isVideo      = false;
+
+  // ── Open image lightbox ─────────────────────────────────────
+  function openImage(group, index) {
+    isVideo      = false;
+    currentGroup = group;
+    currentIndex = index;
+    renderImage(index, false);
+    openLightbox();
+  }
+
+  // ── Open video lightbox ─────────────────────────────────────
+  function openVideo(src, caption) {
+    isVideo      = true;
+    currentGroup = null;
+    const wrap   = document.createElement('div');
+    wrap.className = 'lb-video-frame-wrap';
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.title = caption || 'Video';
+    wrap.appendChild(iframe);
+    lbMediaWrap.innerHTML = '';
+    lbMediaWrap.appendChild(wrap);
+    lbCaption.textContent  = caption || '';
+    lbCounter.textContent  = '';
+    lbPrev.classList.add('lb-hidden');
+    lbNext.classList.add('lb-hidden');
+    openLightbox();
+  }
+
+  // ── Render image at index ───────────────────────────────────
+  function renderImage(index, animate) {
+    const item  = currentGroup[index];
+    const total = currentGroup.length;
+
+    const doRender = () => {
+      lbMediaWrap.innerHTML = '';
+      const img      = document.createElement('img');
+      img.className  = 'lb-img';
+      img.src        = item.src;
+      img.alt        = item.alt;
+      lbMediaWrap.appendChild(img);
+
+      lbCaption.textContent = item.caption || '';
+      lbCounter.textContent = total > 1 ? `${index + 1} / ${total}` : '';
+
+      // Arrow visibility
+      lbPrev.classList.toggle('lb-hidden', total <= 1);
+      lbNext.classList.toggle('lb-hidden', total <= 1);
+
+      if (animate) {
+        lbMediaWrap.classList.remove('lb-fade-out');
+        lbMediaWrap.classList.add('lb-fade-in');
+      }
+    };
+
+    if (animate) {
+      lbMediaWrap.classList.add('lb-fade-out');
+      lbMediaWrap.classList.remove('lb-fade-in');
+      setTimeout(doRender, 180);
+    } else {
+      doRender();
+    }
+  }
+
+  // ── Open / close lightbox ───────────────────────────────────
+  function openLightbox() {
+    lb.removeAttribute('aria-hidden');
+    lb.classList.add('lb-open');
+    document.body.style.overflow = 'hidden';
+    // Focus the close button for keyboard users
+    setTimeout(() => lbClose.focus(), 50);
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('lb-open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    // Clear iframe src to stop video playback
+    const iframe = lbMediaWrap.querySelector('iframe');
+    if (iframe) iframe.src = '';
+    setTimeout(() => { lbMediaWrap.innerHTML = ''; }, 320);
+  }
+
+  // ── Navigate prev / next ────────────────────────────────────
+  function navigate(dir) {
+    if (!currentGroup) return;
+    const total = currentGroup.length;
+    currentIndex = (currentIndex + dir + total) % total;
+    renderImage(currentIndex, true);
+  }
+
+  // ── Event listeners ─────────────────────────────────────────
+  lbClose.addEventListener('click', closeLightbox);
+  lbBackdrop.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', () => navigate(-1));
+  lbNext.addEventListener('click', () => navigate(1));
+
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('lb-open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+
+  // ── Click on lb-group images ────────────────────────────────
+  document.querySelectorAll('[data-lb-group]').forEach(img => {
+    img.addEventListener('click', () => {
+      const group = img.dataset.lbGroup;
+      const index = parseInt(img.dataset.lbIndex, 10);
+      openImage(imageGroups[group], index);
+    });
+  });
+
+  // ── Click on video expand buttons ──────────────────────────
+  document.querySelectorAll('.lb-video-expand').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const iframe  = btn.closest('.card-arch-media, .lb-video-container').querySelector('iframe[data-lb-video]');
+      if (!iframe) return;
+      const src     = iframe.dataset.lbVideo;
+      const caption = iframe.dataset.lbCaption || '';
+      openVideo(src, caption);
+    });
+  });
+
+  // ── Touch swipe support ─────────────────────────────────────
+  let touchStartX = 0;
+  lb.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
+  }, { passive: true });
+
 }); // end DOMContentLoaded
