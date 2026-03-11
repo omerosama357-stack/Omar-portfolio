@@ -984,6 +984,20 @@ h1.hero-name {
   color: rgba(232,237,245,0.75);
 }
 
+/* ─── BASMALA TOP ──────────────────────────────────────── */
+.basmala-top {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 999;
+  text-align: center;
+  font-size: 18px;
+  color: rgba(255,180,0,0.55);
+  letter-spacing: 0.08em;
+  padding: 6px 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(5,8,16,0.7) 0%, transparent 100%);
+}
+
 /* ─── FOOTER ───────────────────────────────────────────── */
 footer {
   border-top: 1px solid rgba(255,180,0,0.08);
@@ -1013,6 +1027,99 @@ footer {
   letter-spacing: 0.12em;
 }
 
+/* ─── GALLERY LIGHTBOX ─────────────────────────────────── */
+.gallery-thumb {
+  cursor: none;
+  transition: transform 0.25s, filter 0.25s, box-shadow 0.25s;
+}
+.gallery-thumb:hover {
+  transform: scale(1.05);
+  filter: brightness(1.15);
+  box-shadow: 0 0 0 2px var(--amber);
+  z-index: 2;
+  position: relative;
+}
+
+#lightbox-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 10000;
+  background: rgba(5,8,16,0.96);
+  backdrop-filter: blur(12px);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#lightbox-overlay.open { display: flex; }
+
+#lightbox-img-wrap {
+  position: relative;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#lightbox-img {
+  max-width: 88vw;
+  max-height: 78vh;
+  object-fit: contain;
+  border: 1px solid rgba(255,180,0,0.25);
+  border-radius: 8px;
+  box-shadow: 0 0 80px rgba(255,180,0,0.1);
+  transition: opacity 0.25s;
+}
+#lightbox-caption {
+  margin-top: 16px;
+  font-family: var(--font-code);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: rgba(156,180,170,0.6);
+  text-align: center;
+}
+#lightbox-counter {
+  margin-top: 8px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: rgba(255,180,0,0.45);
+}
+.lb-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(13,20,40,0.9);
+  border: 1px solid rgba(255,180,0,0.25);
+  border-radius: 12px;
+  color: var(--amber);
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none;
+  transition: all 0.2s;
+  z-index: 10001;
+}
+.lb-btn:hover {
+  background: rgba(255,180,0,0.15);
+  border-color: var(--amber);
+  box-shadow: 0 0 20px rgba(255,180,0,0.2);
+}
+#lb-prev { left: 20px; }
+#lb-next { right: 20px; }
+#lb-close {
+  position: fixed;
+  top: 20px; right: 20px;
+  background: rgba(13,20,40,0.9);
+  border: 1px solid rgba(255,180,0,0.25);
+  border-radius: 10px;
+  color: rgba(156,180,170,0.7);
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none;
+  z-index: 10001;
+  transition: all 0.2s;
+}
+#lb-close:hover { color: var(--rose); border-color: var(--rose); }
+
 /* ─── FADE-IN ANIMATION ────────────────────────────────── */
 .fade-up {
   opacity: 0;
@@ -1031,6 +1138,9 @@ footer {
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
 
+<!-- BASMALA -->
+<div class="basmala-top" aria-label="بسم الله الرحمن الرحيم" lang="ar">بسم الله الرحمن الرحيم</div>
+
 <!-- PARTICLE CANVAS -->
 <canvas id="particle-canvas"></canvas>
 
@@ -1041,11 +1151,11 @@ footer {
 <aside class="sidebar-left" aria-label="Social links">
   <div class="sidebar-icons">
     <!-- LinkedIn -->
-    <a href="https://www.linkedin.com/in/omar-alrefaey/" target="_blank" rel="noopener" aria-label="LinkedIn">
+    <a href="https://www.linkedin.com/in/omar-al-refaey-006006180/" target="_blank" rel="noopener" aria-label="LinkedIn">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
     </a>
     <!-- Email -->
-    <a href="mailto:omar.alrefaey@gmail.com" aria-label="Email">
+    <a href="/cdn-cgi/l/email-protection#f39c9e9281dd929f81969592968ab3949e929a9fdd909c9e" aria-label="Email">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
     </a>
   </div>
@@ -1053,7 +1163,7 @@ footer {
 </aside>
 
 <aside class="sidebar-right" aria-label="Contact email">
-  <a href="mailto:omar.alrefaey@gmail.com">omar.alrefaey@gmail.com</a>
+  <a href="/cdn-cgi/l/email-protection#284745495a0649445a4d4e494d51684f45494144064b4745"><span class="__cf_email__" data-cfemail="204f4d41520e414c52454641455960474d41494c0e434f4d">[email&#160;protected]</span></a>
   <div class="sidebar-line"></div>
 </aside>
 
@@ -1390,7 +1500,7 @@ footer {
   <section id="tab-projects" aria-labelledby="proj-h">
     <div class="section-wrap">
       <div class="section-eyebrow">04 — Projects</div>
-      <h2 class="section-title" id="proj-h">THE SIX PILLARS</h2>
+      <h2 class="section-title" id="proj-h">The Show Case</h2>
       <p class="section-sub">Independent projects spanning AI, media, and software development</p>
 
       <div class="projects-grid">
@@ -1435,20 +1545,13 @@ footer {
         <!-- Educational Media -->
         <article class="project-card fade-up">
           <div class="card-media" style="height:280px;">
-            <div style="display:flex;flex-direction:column;height:100%;gap:2px;">
               <iframe
                 src="https://www.youtube.com/embed/7-DmqLuNBDw?rel=0&modestbranding=1"
                 title="Educational Media Production — sample thesis video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen loading="lazy"
-                style="width:100%;flex:1;min-height:0;border:none;">
+                style="width:100%;height:100%;border:none;">
               </iframe>
-              <img
-                src="https://res.cloudinary.com/duahrqhpz/image/upload/w_800,f_auto,q_auto/v1773226485/GraduationProject2021LinuxBasicUnderstanding_mzfs7b.jpg"
-                alt="Graduation Project 2021 — Linux Basics production still"
-                loading="lazy"
-                style="width:100%;height:80px;object-fit:cover;object-position:top;" />
-            </div>
           </div>
           <div class="card-body">
             <div class="card-tag">Media Production</div>
@@ -1481,26 +1584,23 @@ footer {
           </div>
         </article>
 
-        <!-- Photoshop Gallery — WIDE -->
+        <!-- Art&Work Gallery — WIDE -->
         <article class="project-card project-card--wide fade-up">
           <div class="card-media" style="height:280px;">
             <div class="card-media-gallery">
-              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225880/ART1_ngpci2.jpg" alt="Digital Art composition 1" loading="lazy" />
-              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225878/ART2_hbsshh.jpg" alt="Digital Art composition 2" loading="lazy" />
-              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/ART3_hbz3yh.jpg" alt="Digital Art composition 3" loading="lazy" />
-              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/ART4_s95icw.jpg" alt="Digital Art composition 4" loading="lazy" />
-              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/oscar_hmtccw.jpg" alt="Oscar award graphic composition" loading="lazy" />
-              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/RANDOM1_u8zztf.png" alt="Graphic design work sample 1" loading="lazy" />
-              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/RANDOM2_kad9tc.png" alt="Graphic design work sample 2" loading="lazy" />
-              <div class="gallery-more" aria-hidden="true">
-                <span style="font-size:20px;">✦</span>
-                <span>& More</span>
-              </div>
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225880/ART1_ngpci2.jpg" alt="Digital Art composition 1" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773225880/ART1_ngpci2.jpg" data-caption="Digital Art Composition 1" />
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225878/ART2_hbsshh.jpg" alt="Digital Art composition 2" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773225878/ART2_hbsshh.jpg" data-caption="Digital Art Composition 2" />
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/ART3_hbz3yh.jpg" alt="Digital Art composition 3" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773225879/ART3_hbz3yh.jpg" data-caption="Digital Art Composition 3" />
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/ART4_s95icw.jpg" alt="Digital Art composition 4" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773225879/ART4_s95icw.jpg" data-caption="Digital Art Composition 4" />
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/oscar_hmtccw.jpg" alt="Oscar award graphic composition" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773225879/oscar_hmtccw.jpg" data-caption="Oscar Award Graphic Composition" />
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/RANDOM1_u8zztf.png" alt="Graphic design work sample 1" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773225879/RANDOM1_u8zztf.png" data-caption="Graphic Design Work Sample 1" />
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773225879/RANDOM2_kad9tc.png" alt="Graphic design work sample 2" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773225879/RANDOM2_kad9tc.png" data-caption="Graphic Design Work Sample 2" />
+              <img src="https://res.cloudinary.com/duahrqhpz/image/upload/w_800,f_auto,q_auto/v1773226485/GraduationProject2021LinuxBasicUnderstanding_mzfs7b.jpg" alt="Graduation Project 2021 — Linux Basics production still" loading="lazy" class="gallery-thumb" data-gallery="photoshop" data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773226485/GraduationProject2021LinuxBasicUnderstanding_mzfs7b.jpg" data-caption="Graduation Project 2021 — Linux Basics" />
             </div>
           </div>
           <div class="card-body">
             <div class="card-tag">Visual Art</div>
-            <h3 class="card-title">Photoshop Gallery</h3>
+            <h3 class="card-title">Art&Work Gallery</h3>
             <p class="card-desc">A collection of professional and artistic Photoshop compositions — spanning photo manipulation, digital illustration, graphic design, and brand-level visual work. Every piece reflects technical precision paired with a strong visual instinct.</p>
             <div class="card-tech">
               <span>Adobe Photoshop</span><span>Illustrator</span><span>Photo Retouching</span><span>Compositing</span>
@@ -1539,10 +1639,10 @@ footer {
       <p class="section-sub">Open to opportunities in QA, AI tooling, and creative-technical roles</p>
 
       <div class="contact-grid">
-        <a class="contact-tile" href="mailto:omar.alrefaey@gmail.com" aria-label="Send email to Omar">
+        <a class="contact-tile" href="/cdn-cgi/l/email-protection#4c23212d3e622d203e292a2d29350c2b212d2520622f2321" aria-label="Send email to Omar">
           <div class="contact-icon" aria-hidden="true">✉️</div>
           <div class="contact-label">Email</div>
-          <div class="contact-value">omar.alrefaey@gmail.com</div>
+          <div class="contact-value"><span class="__cf_email__" data-cfemail="e18e8c8093cf808d938487808498a1868c80888dcf828e8c">[email&#160;protected]</span></div>
         </a>
         <a class="contact-tile" href="tel:+201014394307" aria-label="Call Omar">
           <div class="contact-icon" aria-hidden="true">📞</div>
@@ -1554,7 +1654,7 @@ footer {
           <div class="contact-label">Location</div>
           <div class="contact-value">Cairo, Egypt</div>
         </div>
-        <a class="contact-tile" href="https://www.linkedin.com/in/omar-alrefaey/" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+        <a class="contact-tile" href="https://www.linkedin.com/in/omar-al-refaey-006006180/" target="_blank" rel="noopener" aria-label="LinkedIn profile">
           <div class="contact-icon" aria-hidden="true">💼</div>
           <div class="contact-label">LinkedIn</div>
           <div class="contact-value">omar-alrefaey</div>
@@ -1567,7 +1667,6 @@ footer {
 
 <!-- FOOTER -->
 <footer>
-  <p class="footer-arabic" lang="ar">بسم الله الرحمن الرحيم</p>
   <p class="footer-name">OMAR AL-REFAEY</p>
   <p class="footer-copy">© 2025 · Built with precision & purpose · Quality Analyst · AI Builder · Creative Technologist</p>
 </footer>
@@ -1644,7 +1743,25 @@ footer {
   </div>
 </div>
 
-<script>
+<!-- LIGHTBOX -->
+<div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button id="lb-close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <button class="lb-btn" id="lb-prev" aria-label="Previous image">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div id="lightbox-img-wrap">
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+  <button class="lb-btn" id="lb-next" aria-label="Next image">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <p id="lightbox-caption"></p>
+  <p id="lightbox-counter"></p>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── PARTICLE CANVAS ──────────────────────────────────── */
 (function(){
   const canvas = document.getElementById('particle-canvas');
@@ -1798,15 +1915,90 @@ footer {
   sections.forEach(s => io.observe(s));
 })();
 
-/* ── FADE-UP ON SCROLL ───────────────────────────────── */
+/* ── FADE-UP ON SCROLL ──────────────────────────── */
 (function(){
-  const els = document.querySelectorAll('.fade-up');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+  const faders = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
     });
-  }, { threshold: 0.1 });
-  els.forEach(el => io.observe(el));
+  }, { threshold: 0.12 });
+  faders.forEach(el => observer.observe(el));
+})();
+
+/* ── LIGHTBOX ────────────────────────────────────────── */
+(function(){
+  const overlay  = document.getElementById('lightbox-overlay');
+  const lbImg    = document.getElementById('lightbox-img');
+  const lbCap    = document.getElementById('lightbox-caption');
+  const lbCnt    = document.getElementById('lightbox-counter');
+  const btnClose = document.getElementById('lb-close');
+  const btnPrev  = document.getElementById('lb-prev');
+  const btnNext  = document.getElementById('lb-next');
+
+  let currentGallery = [];
+  let currentIndex   = 0;
+
+  function open(thumbs, index){
+    currentGallery = Array.from(thumbs);
+    currentIndex   = index;
+    show();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function show(){
+    const item = currentGallery[currentIndex];
+    lbImg.style.opacity = '0';
+    lbImg.src = item.dataset.full || item.src;
+    lbImg.alt = item.alt;
+    lbImg.onload = () => { lbImg.style.opacity = '1'; };
+    lbCap.textContent = item.dataset.caption || item.alt;
+    lbCnt.textContent = `${currentIndex + 1} / ${currentGallery.length}`;
+    btnPrev.style.visibility = currentGallery.length > 1 ? 'visible' : 'hidden';
+    btnNext.style.visibility = currentGallery.length > 1 ? 'visible' : 'hidden';
+  }
+
+  function prev(){
+    currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+    show();
+  }
+
+  function next(){
+    currentIndex = (currentIndex + 1) % currentGallery.length;
+    show();
+  }
+
+  // Attach click to gallery thumbnails — group by data-gallery attribute
+  document.querySelectorAll('.gallery-thumb').forEach(img => {
+    img.addEventListener('click', function(){
+      const galleryKey = this.dataset.gallery;
+      const siblings   = document.querySelectorAll(`.gallery-thumb[data-gallery="${galleryKey}"]`);
+      const idx        = Array.from(siblings).indexOf(this);
+      open(siblings, idx);
+    });
+  });
+
+  btnClose.addEventListener('click', close);
+  btnPrev.addEventListener('click', prev);
+  btnNext.addEventListener('click', next);
+
+  overlay.addEventListener('click', e => { if(e.target === overlay) close(); });
+
+  document.addEventListener('keydown', e => {
+    if(!overlay.classList.contains('open')) return;
+    if(e.key === 'ArrowLeft')  prev();
+    if(e.key === 'ArrowRight') next();
+    if(e.key === 'Escape')     close();
+  });
 })();
 </script>
 </body>
