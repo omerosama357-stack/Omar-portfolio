@@ -984,3 +984,251 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHTBOX & MEDIA VIEWER
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Zoom-hint on all lightbox-able images ──────────────────── */
+[data-lb-group] {
+  cursor: zoom-in;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  position: relative;
+}
+[data-lb-group]:hover {
+  transform: scale(1.04);
+  filter: brightness(1.08);
+  z-index: 2;
+}
+
+/* Gallery grid images get the zoom-in cursor + scale */
+.gallery-grid--4col [data-lb-group] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Lucy split-grid images */
+#proj-lucy .card-arch-media [data-lb-group] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Video expand button ─────────────────────────────────────── */
+.lb-video-container {
+  position: relative;
+}
+.lb-video-expand {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(27, 58, 107, 0.85);
+  color: var(--gold-l);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+  line-height: 1;
+}
+.lb-video-expand:hover {
+  background: var(--terracotta);
+  transform: scale(1.1);
+}
+/* For the documentary card the button is a sibling of the iframe,
+   placed via absolute on the .card-arch-media */
+.card-arch-media > .lb-video-expand {
+  top: 10px;
+  right: 10px;
+}
+
+/* ── Lightbox overlay ────────────────────────────────────────── */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#lightbox.lb-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lb-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 8, 5, 0.92);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+/* ── Close button ────────────────────────────────────────────── */
+.lb-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.4rem;
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  background: rgba(245, 240, 232, 0.1);
+  border: 1px solid rgba(245, 240, 232, 0.2);
+  border-radius: 4px;
+  color: var(--stucco);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.lb-close:hover {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+}
+
+/* ── Prev / Next arrows ──────────────────────────────────────── */
+.lb-prev, .lb-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 52px;
+  height: 52px;
+  background: rgba(245, 240, 232, 0.1);
+  border: 1px solid rgba(245, 240, 232, 0.2);
+  border-radius: 4px;
+  color: var(--stucco);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.lb-prev { left: 1.4rem; }
+.lb-next { right: 1.4rem; }
+.lb-prev:hover, .lb-next:hover {
+  background: rgba(245, 240, 232, 0.2);
+  border-color: var(--gold);
+}
+.lb-prev.lb-hidden, .lb-next.lb-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Stage: contains media + footer ─────────────────────────── */
+.lb-stage {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: min(92vw, 1100px);
+  max-height: 90vh;
+  width: 100%;
+}
+
+/* ── Media wrap ──────────────────────────────────────────────── */
+.lb-media-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 80vh;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  will-change: opacity, transform;
+}
+.lb-media-wrap.lb-fade-out {
+  opacity: 0;
+  transform: scale(0.97);
+}
+.lb-media-wrap.lb-fade-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Image inside lightbox */
+.lb-media-wrap img.lb-img {
+  max-width: min(90vw, 1100px);
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 3px;
+  display: block;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+  /* Override global img rules */
+  position: static;
+  inset: auto;
+}
+
+/* Iframe (video) inside lightbox */
+.lb-media-wrap .lb-video-frame-wrap {
+  position: relative;
+  width: min(90vw, 960px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+}
+.lb-media-wrap .lb-video-frame-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ── Footer: caption + counter ───────────────────────────────── */
+.lb-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 0.5rem;
+  gap: 1rem;
+}
+.lb-caption {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.7);
+}
+.lb-counter {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .lb-prev { left: 0.5rem; width: 40px; height: 40px; }
+  .lb-next { right: 0.5rem; width: 40px; height: 40px; }
+  .lb-close { top: 0.6rem; right: 0.6rem; width: 38px; height: 38px; }
+  .lb-media-wrap img.lb-img {
+    max-width: 95vw;
+    max-height: 70vh;
+  }
+  .lb-media-wrap .lb-video-frame-wrap {
+    width: 95vw;
+  }
+}
