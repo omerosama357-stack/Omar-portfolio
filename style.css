@@ -823,6 +823,72 @@ footer {
 }
 .footer-year { font-size: 0.8rem; opacity: 0.5; }
 
+/* ── MEDIA CARD LAYOUT OVERRIDES ───────────────────────────── */
+
+/* Gallery grid images must flow statically within their grid cells,
+   not inherit the default absolute-positioning from .card-arch-media img */
+.gallery-grid img {
+  position: static;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+/* 2-column gallery variant (Lucy) — images fill the full card height */
+.gallery-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+  height: 100%;
+}
+.gallery-grid--2 img {
+  height: 100%;
+}
+
+/* Wide card: auto-height so multi-row art grids aren't clipped */
+.card-arch-media--gallery {
+  height: auto;
+  min-height: 260px;
+}
+.card-arch-media--gallery::after { display: none; }
+.card-arch-media--gallery .gallery-grid { height: auto; }
+
+/* Stacked layout: screenshot on top, video embed below */
+.card-arch-media--stacked {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.card-arch-media--stacked::after { display: none; }
+.card-arch-media--stacked > img {
+  position: static;
+  width: 100%;
+  height: 155px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.card-arch-media--stacked .video-embed {
+  position: relative;
+  width: 100%;
+  padding-bottom: 42%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.card-arch-media--stacked .video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Fix: stat-card and skill-pillar fade-in — JS sets inline opacity:0
+   and adds .visible, but CSS rules were missing so they never appeared */
+.stat-card.visible,
+.skill-pillar.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
 /* ── ANIMATIONS ─────────────────────────────────────────────── */
 @keyframes heroFadeIn {
   from { opacity: 0; transform: translateY(30px); }
