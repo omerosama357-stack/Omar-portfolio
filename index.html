@@ -49,6 +49,7 @@ img, video, iframe { display: block; max-width: 100%; }
 ::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 2px; }
 
 /* ─── CUSTOM CURSOR ────────────────────────────────────── */
+/* FIX: z-index raised above lightbox (10000) and its buttons (10001) */
 #cursor-dot {
   position: fixed; top: 0; left: 0;
   width: 8px; height: 8px;
@@ -56,7 +57,7 @@ img, video, iframe { display: block; max-width: 100%; }
   background: var(--amber);
   box-shadow: 0 0 12px var(--amber), 0 0 24px var(--amber);
   pointer-events: none;
-  z-index: 9999;
+  z-index: 10010;
   transform: translate(-50%, -50%);
   transition: none;
 }
@@ -66,7 +67,7 @@ img, video, iframe { display: block; max-width: 100%; }
   border-radius: 50%;
   border: 1.5px solid rgba(255,180,0,0.5);
   pointer-events: none;
-  z-index: 9998;
+  z-index: 10009;
   transform: translate(-50%, -50%);
   transition: transform 0.08s linear, width 0.2s, height 0.2s, border-color 0.2s;
 }
@@ -857,6 +858,33 @@ h1.hero-name {
   width: 100%; height: 100%;
   object-fit: cover;
 }
+
+/* ─── SAI MEDIA LAYOUT ─────────────────────────────────── */
+/* Left: video, Right: 3 stacked gallery thumbs */
+.sai-media-split {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  height: 100%;
+  gap: 2px;
+}
+.sai-media-split iframe {
+  width: 100%; height: 100%;
+  border: none;
+}
+.sai-thumbs {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+  height: 100%;
+}
+.sai-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: filter 0.2s, transform 0.2s;
+}
+
 .card-media-gallery {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1060,6 +1088,8 @@ footer {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  /* Ensure custom cursor still shows */
+  cursor: none;
 }
 #lightbox-overlay.open { display: flex; }
 
@@ -1516,7 +1546,7 @@ footer {
 
       <div class="projects-grid">
 
-        <!-- Lucy — images now gallery-browsable via lightbox -->
+        <!-- Lucy — images gallery-browsable via lightbox -->
         <article class="project-card fade-up">
           <div class="card-media">
             <div class="card-media-grid">
@@ -1548,19 +1578,51 @@ footer {
           </div>
         </article>
 
-        <!-- Sam -->
+        <!-- ══ SAI — renamed from Sam, now with video + gallery images ══ -->
         <article class="project-card fade-up">
-          <div class="card-media">
-            <div class="card-media-ph">
-              <div class="ph-icon" aria-hidden="true">💻</div>
-              <p>sam.jpg</p>
-              <small>Recommended: 800×500 px screenshot</small>
+          <div class="card-media" style="height:280px;">
+            <div class="sai-media-split">
+              <!-- Left: YouTube embed -->
+              <iframe
+                src="https://www.youtube.com/embed/JZeW8bRsHv4?rel=0&modestbranding=1"
+                title="Sai — Local AI System demo video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy">
+              </iframe>
+              <!-- Right: 3 browsable gallery thumbnails -->
+              <div class="sai-thumbs">
+                <img
+                  src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773285894/Sai1_sluz2o.jpg"
+                  alt="Sai AI System — screenshot 1"
+                  loading="lazy"
+                  class="gallery-thumb"
+                  data-gallery="sai"
+                  data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773285894/Sai1_sluz2o.jpg"
+                  data-caption="Sai — System Interface 1" />
+                <img
+                  src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773285894/Sai2_kwecf1.jpg"
+                  alt="Sai AI System — screenshot 2"
+                  loading="lazy"
+                  class="gallery-thumb"
+                  data-gallery="sai"
+                  data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773285894/Sai2_kwecf1.jpg"
+                  data-caption="Sai — System Interface 2" />
+                <img
+                  src="https://res.cloudinary.com/duahrqhpz/image/upload/w_300,f_auto,q_auto/v1773285895/Sai3_xgabdn.jpg"
+                  alt="Sai AI System — screenshot 3"
+                  loading="lazy"
+                  class="gallery-thumb"
+                  data-gallery="sai"
+                  data-full="https://res.cloudinary.com/duahrqhpz/image/upload/w_1200,f_auto,q_auto/v1773285895/Sai3_xgabdn.jpg"
+                  data-caption="Sai — System Interface 3" />
+              </div>
             </div>
           </div>
           <div class="card-body">
             <div class="card-tag">Local AI System</div>
-            <h3 class="card-title">Sam</h3>
-            <p class="card-desc">A fully local PC AI assistant with deep system integration — including full PowerShell and File Explorer access. Sam runs entirely offline, respecting privacy while delivering genuine utility: file management, automation, and scripted workflows, all through natural language.</p>
+            <h3 class="card-title">Sai</h3>
+            <p class="card-desc">A fully local PC AI assistant with deep system integration — including full PowerShell and File Explorer access. Sai runs entirely offline, respecting privacy while delivering genuine utility: file management, automation, and scripted workflows, all through natural language.</p>
             <div class="card-tech">
               <span>Python</span><span>PowerShell</span><span>Local LLM</span><span>Windows API</span>
             </div>
@@ -1633,14 +1695,17 @@ footer {
           </div>
         </article>
 
-        <!-- Rental App -->
+        <!-- ══ Rental Marketplace App — now with YouTube embed ══ -->
         <article class="project-card fade-up">
-          <div class="card-media">
-            <div class="card-media-ph">
-              <div class="ph-icon" aria-hidden="true">📱</div>
-              <p>app.jpg</p>
-              <small>Recommended: Phone mockup or screenshot</small>
-            </div>
+          <div class="card-media" style="height:280px;">
+            <iframe
+              src="https://www.youtube.com/embed/8uEAmS2akkY?rel=0&modestbranding=1"
+              title="Rental Marketplace App — demo video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+              style="width:100%;height:100%;border:none;">
+            </iframe>
           </div>
           <div class="card-body">
             <div class="card-tag">Android App</div>
@@ -1865,6 +1930,7 @@ footer {
   document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
   document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
 
+  // Expand ring on interactive elements — also covers lightbox buttons
   document.querySelectorAll('a, button, .contact-tile, .project-card, .skill-pillar').forEach(el => {
     el.addEventListener('mouseenter', () => {
       ring.style.width = '56px';
